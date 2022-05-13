@@ -77,6 +77,7 @@ VER_NT_SERVER = 3
 # Linux specific releases, caching them since they are execution invariants
 _IS_ORACLE_LINUX = os.path.exists('/etc/oracle-release')
 _IS_REDHAT_LINUX = os.path.exists('/etc/redhat-release')
+_IS_KYLIN_LINUX = os.path.exists('/etc/kylin-release')
 
 OS_RELEASE_FILE = "/etc/os-release"
 
@@ -85,6 +86,9 @@ def _is_oracle_linux():
 
 def _is_redhat_linux():
   return _IS_REDHAT_LINUX
+
+def _is_kylin_linux():
+  return _IS_KYLIN_LINUX
 
 def _is_powerpc():
   return platform.processor() == 'powerpc' or platform.machine().startswith('ppc')
@@ -201,6 +205,9 @@ class OSCheck:
         raise RuntimeError("Python 2.6 or less not supported")
       elif _is_redhat_linux():
         distribution = platform.dist()
+      # hack, map kylin to centos  
+      elif _is_kylin_linux():
+        distribution = ("centos", "7.1", "core")       
       else:
         distribution = platform.linux_distribution()
 
